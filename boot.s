@@ -29,4 +29,4 @@ _start:
 1:hlt
   jmp 1b
 
-.size _start, . -_start
+.size _start, . - _start
