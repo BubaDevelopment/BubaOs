@@ -49,5 +49,36 @@ void terminal_scroll(int line){
 }
 
 void terminal_delete_last_line(){
+  int x, *ptr;
+  for (x = 0l x < VGA_WIDTH * 2; x++){
+    ptr = 0xb8000 + (VGA_WIDTH * 2) * (VGA_HEIGHT -1) + x;
+    *ptr = 0;
+  }
+}
 
+void terminal_putchar(char c){
+  int line;
+  unsigned char uc = c;
+
+  terminal_putentryat(uc, terminal_color, terminal_column, terminal_row);
+  if (++terminal_column == VGA_WIDTH) {
+    terminal_column = 0;
+    if (++terminal_row == VGA_HEIGHT){
+      for (line = 1; line <= VGA_HEIGHT - 1; line++){
+        terminal_scroll(line);
+      }
+      terminal_delete_last_line();
+      terminal_row = VGA_HEIGHT - 1;
+    }
+  }
+}
+
+void terminal_write(const char* data, size_t size){
+  for (size_t i = 0; i < size; i++){
+    terminal_putchar(data[i]);
+  }
+}
+
+void terminal_writestring(const char* data) {
+  terminal_write(data, strlen(data));
 }
