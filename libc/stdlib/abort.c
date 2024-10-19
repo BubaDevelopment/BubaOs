@@ -2,14 +2,14 @@
 #include <stdlib.h>
 
 __attribute__((__noreturn__))
-void abort(void){
+void abort(void) {
 #if defined(__is_libk)
-  printf("kernel: panic: abort()\n");
-    asm volatile("hlt");
-#else 
-  printf("abort()\n");
+	// TODO: Add proper kernel panic.
+	printf("kernel: panic: abort()\n");
+#else
+	// TODO: Abnormally terminate the process as if by SIGABRT.
+	printf("abort()\n");
 #endif
-  while (1){
-  __builtin_unreachable();
-  }
+	while (1) { }
+	__builtin_unreachable();
 }
